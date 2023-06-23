@@ -1,0 +1,38 @@
+version: "3"
+services:
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/kaggle
+    working_dir: ${WORKING_DIR}
+    ports:
+      - "8080:8080"
+    environment:
+      HOME: ${WORKING_DIR}
+    command: jupyter notebook --port 8080 --ip=0.0.0.0 --notebook-dir="${WORKING_DIR}" --no-browser --allow-root --NotebookApp.token=''
+    restart: always
+
+# version: "3"
+# services:
+#   jupyter:
+#     build: .
+#     volumes:
+#       - $PWD:/tmp/working
+#     working_dir: /tmp/working
+#     ports:
+#       - 8888:8888
+#     command: jupyter notebook --ip=0.0.0.0 --allow-root --no-browser
+# version: '3.4'
+
+# services:
+#   programming:
+#     image: programming
+#     build: .
+#     volumes:
+#       - $PWD:/tmp/working
+#     ports:
+#     - 8888:8888
+#     dockerfile: ./Dockerfile
+#     command: jupyter notebook --ip=0.0.0.0 --allow-root --no-browser
