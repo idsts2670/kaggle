@@ -1,16 +1,31 @@
-FROM gcr.io/kaggle-images/python:latest
-RUN mkdir -p /kaggle/working
-# RUN mkdir -p /kaggle/working && \
-    # conda install -y -c conda-forge mlflow
+FROM continuumio/miniconda3
 
-# # For more information, please refer to https://aka.ms/vscode-docker-python
-# FROM gcr.io/kaggle-images/python:v56
+WORKDIR /tmp
+ADD environment.yml /tmp/environment.yml
 
-# WORKDIR /code
 
-# COPY ./requirements.txt ./
+RUN set -x
+RUN apt update -y
+RUN apt upgrade -y
 
-# # Install pip requirements
-# # set --upgrade flag to upgrade pip first and set --no-cache-dir flag to avoid caching the index locally
-# RUN pip install -U pip && \
-#     pip install fastprogress japanize-matplotlib
+RUN apt install -y wget \
+    sudo \
+    vim
+
+RUN conda update -y conda
+RUN conda install -y pandas \
+    matplotlib \
+    seaborn \
+    scikit-learn \
+    numpy \
+    pytorch \
+    lightgbm \
+    python-dateutil \
+    openpyxl \
+    boto3 \
+    jupyter
+
+RUN pip install --no-cache-dir -U polars
+
+# RUN conda env create -f /tmp/environment.yml
+# RUN conda install --no-cache-dir --upgrade -r /code/requirements.txt
