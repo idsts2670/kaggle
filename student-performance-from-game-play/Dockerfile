@@ -1,7 +1,6 @@
-FROM continuumio/miniconda3
-
-WORKDIR /tmp
-ADD environment.yml /tmp/environment.yml
+FROM --platform=linux/amd64 continuumio/miniconda3
+# WORKDIR /tmp
+# ADD environment.yml /tmp/environment.yml
 
 
 RUN set -x
