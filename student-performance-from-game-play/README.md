@@ -6,7 +6,7 @@ Go to the website (https://us-west-2.console.aws.amazon.com/ec2/home?region=us-w
 
 Go to the folder where the Dockerfile is located and run the following commands to :
 ```zsh
-ssh -i ~/.ssh/key-kaggle.pem ec2-user@ec2-35-83-194-69.us-west-2.compute.amazonaws.com
+ssh -i ~/.ssh/key-ml.pem ec2-user@ec2-52-10-225-13.us-west-2.compute.amazonaws.com
 ```
 
 Start the docker in ECR and check if the image is there:
@@ -67,12 +67,12 @@ chmod 400 ~/.ssh/key-kaggle.pem
 # check the current key-pair status again
 ls -l .ssh/key-ml.pem
 # Use the example to connect to your instance using its Public DNS:
-ssh -i ~/.ssh/key-ml.pem ec2-user@ec2-52-10-225-13.us-west-2.compute.amazonaws.com
+ssh -i ~/.ssh/key-ml.pem ec2-user@ec2-35-81-183-123.us-west-2.compute.amazonaws.com
 # check with the command
 ls
 pwd
 # Go to your working directory and type the same command above again
-ssh -i ~/.ssh/key-ml.pem ec2-user@ec2-52-10-225-13.us-west-2.compute.amazonaws.com
+ssh -i ~/.ssh/key-ml.pem ec2-user@ec2-35-81-183-123.us-west-2.compute.amazonaws.com
 ```
 
 * Install Docker on EC2 instance
@@ -86,7 +86,7 @@ sudo usermod -a -G docker ec2-user
 exit
 # then, reboot the instance on the website (https://us-west-2.console.aws.amazon.com/ec2/).
 # After the reboot, connect to the instance again by using the following command:
-ssh -i ~/.ssh/key-ml.pem ec2-user@ec2-52-10-225-13.us-west-2.compute.amazonaws.com
+ssh -i ~/.ssh/key-ml.pem ec2-user@ec2-35-81-183-123.us-west-2.compute.amazonaws.com
 sudo service docker start
 docker image ls
 ```
@@ -123,12 +123,46 @@ workdir# ls
 exit
 cd work/
 ls
+```
 
+* Run the docker image on EC2 instance with Jupyter Notebook:
+```zsh
+jupyter notebook --notebook-dir='/workdir' --ip=0.0.0.0 --no-browser --port=8080 --allow-root
+# you then copy the token like below from the terminal and paste it in the browser address bar.
+http://127.0.0.1:8080/?token=********************************
+# Yet, you would still not be able to access jupytern otebook. You need to run the following command:
+# open another terminal and run the following command to do port forwarding:
+ssh -i ~/.ssh/key-ml.pem -L 8080:localhost:8080 ec2-user@ec2-35-81-183-123.us-west-2.compute.amazonaws.com
+# Open your browser and type the following address in the address bar:
+localhost:8080
+# Then, you can see the login page for Jupyter Notebook. Copy and paste the token from the terminal (which following the message "Or copy and paste one of these URLs:") and click on the "Log in" button.
+# Then, you can see the Jupyter Notebook page. Click on the "New" button and select "Python 3" to create a new notebook.
+```
+
+# Next time, you can just run the following command to start the docker image:
+```zsh
+ssh -i ~/.ssh/key-ml.pem ec2-user@ec2-35-81-183-123.us-west-2.compute.amazonaws.com
+sudo service docker start
+docker image ls
+# enter the docker image
+docker run --name ml-image -it --rm -v ~/work:/workdir -p 8080:8080 ec59c782d5c3
+# run the jupyter notebook
+jupyter notebook --notebook-dir='/workdir' --ip=0.0.0.0 --no-browser --port=8080 --allow-root
+# copy and paste the link in the browser address bar
+http://127.0.0.1:8080/?token=********************************
+# open another terminal and run the following command to do port forwarding:
+ssh -i ~/.ssh/key-ml.pem -L 8080:localhost:8080 ec2-user@ec2-35-81-183-123.us-west-2.compute.amazonaws.com
+# Open your browser and type the following address in the address bar:
+localhost:8080
+# type the token and click on the "Log in" button
+# Then, you can see the Jupyter Notebook page. Click on the "New" button and select "Python 3" to create a new notebook.
 ```
 
 
 
-# what is ECR?
+
+# Reference
+* what is ECR?
 Amazon Elastic Container Registry (ECR)
 Here used as the Container Registry for Docker Container
 Through AWS CLI, we can push the docker image to ECR and pull the image from ECR to EC2 instance
