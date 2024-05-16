@@ -1,2 +1,22 @@
+# Log files
+*.log
+
+# Environment variables
+.env
+
+# Operating System Files
 .DS_Store
+
+# Python
+*.pyc
+__pycache__/
+
+# R
+.Rhistory
+.RData
+.Ruserdata
+## knitr and R markdown default cache directories
+/*_cache/
+
+
 app/Dockerfile
